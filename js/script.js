@@ -19,7 +19,8 @@ const invalidEntryLabelName = document.createElement('label'); //creates label e
 const jobRoleOptions = document.querySelector('#title'); //defines Job Role select element
 const nameInput = document.getElementById('name'); //defines name input element
 const otherTitleTextInput = document.getElementById('other-title'); //input box for user to enter "other role" in Job Role Section
-const paymentSelectorOptions = document.getElementById('payment').options; //defines Payment option elements
+const paymentSelector = document.getElementById('payment'); //defines Payment selector element
+const paymentSelectorOptions = paymentSelector.options; //defines Payment options elements
 const paypalDiv = document.getElementById('paypal'); //defines div with all elements associated with PayPal
 const zipCodeInput = document.getElementById('zip'); //defines credit card zipcode input element
 
@@ -30,7 +31,7 @@ colorDefaultMessage.textContent = 'Please select a T-shirt theme.';
 colorSelector.appendChild(colorDefaultMessage);
 otherTitleTextInput.style.display = 'none';
 designSelectorOptions[0].selected = true;
-colorSelector.hidden = true;
+colorSelector.style.display = 'none';
 document.querySelector('.activities').appendChild(costTotalSpan);
 costTotalSpan.innerHTML = 'Total = $0';
 paymentSelectorOptions[0].setAttribute('disabled', 'disabled');
@@ -201,25 +202,23 @@ jobRoleOptions.addEventListener('click', (event) => {
 * Adds Event Listener to Design select options and hides
 * color options based on selection.
 */
-for (let i = 0; i < designSelectorOptions.length; i++)
-    designSelectorOptions[i].addEventListener('click', function (event) {
-        hideColorSelectorOptions();
-        
-        if (event.target.value === 'js puns') {
-            colorSelector.hidden = false;
-            designSelectorOptions[0].disabled = true;
-            colorSelectorOptions[0].selected = true;
-            colorSelectorOptions[0].hidden = false;
-            colorSelectorOptions[1].hidden = false;
-            colorSelectorOptions[2].hidden = false;
-         } else if (event.target.value === 'heart js'){
-            colorSelector.hidden = false;
-            designSelectorOptions[0].disabled = true;
-            colorSelectorOptions[3].selected = true;
-            colorSelectorOptions[3].hidden = false;  
-            colorSelectorOptions[4].hidden = false;
-            colorSelectorOptions[5].hidden = false; 
-        };
+designSelector.addEventListener('click', function (event) {
+    hideColorSelectorOptions();
+     if (event.target.value === 'js puns') {
+        colorSelector.style.display = 'block';
+        designSelectorOptions[0].disabled = true;
+        colorSelectorOptions[0].selected = true;
+        colorSelectorOptions[0].hidden = false;
+        colorSelectorOptions[1].hidden = false;
+        colorSelectorOptions[2].hidden = false;
+    } else if (event.target.value === 'heart js'){
+        colorSelector.style.display = 'block';
+        designSelectorOptions[0].disabled = true;
+        colorSelectorOptions[3].selected = true;
+        colorSelectorOptions[3].hidden = false;  
+        colorSelectorOptions[4].hidden = false;
+        colorSelectorOptions[5].hidden = false; 
+    };
         
 });
 
@@ -256,23 +255,22 @@ document.querySelector('.activities').addEventListener('change', function (event
 * Adds Event Listener on Payment Options and sets conditions to show specific Divs
 * based on the option clicked.
 */
-for (let i = 0; i < paymentSelectorOptions.length; i++) {
-    paymentSelectorOptions[i].addEventListener('click', () => {
-        if (i === 1){
+paymentSelector.addEventListener('click', (event) => {
+    if (event.target.value === 'credit card'){
             creditCardDiv.style.display = 'block';
             paypalDiv.style.display = 'none';
             bitcoinDiv.style.display = 'none';
             paymentSelectorOptions[1].selected = true;
             paymentSelectorOptions[2].selected = false;
             paymentSelectorOptions[3].selected = false;
-        } else if (i === 2) {
+        } else if (event.target.value === 'paypal') {
             creditCardDiv.style.display = 'none';
             paypalDiv.style.display = 'block';
             bitcoinDiv.style.display = 'none';
             paymentSelectorOptions[1].selected = false;
             paymentSelectorOptions[2].selected = true;
             paymentSelectorOptions[3].selected = false;
-        } else if (i === 3) {
+        } else if (event.target.value === 'bitcoin') {
             creditCardDiv.style.display = 'none';
             paypalDiv.style.display = 'none';
             bitcoinDiv.style.display = 'block';
@@ -281,7 +279,6 @@ for (let i = 0; i < paymentSelectorOptions.length; i++) {
             paymentSelectorOptions[3].selected = true;
         }
     });
-}
 
 // Adds Event Listener to check name input validity when user clicks away from field
 nameInput.addEventListener('blur', () => { isValidName();});
@@ -294,8 +291,6 @@ document.addEventListener('submit', (event) => {
     if (!isValidName() | !isValidEmail() | !isActivitySelectionValid() | !isCreditCardDataValid()) {
         event.preventDefault();
     } else {
-        event.preventDefault();
-        console.log('data accepted');
     }   
 });
 
